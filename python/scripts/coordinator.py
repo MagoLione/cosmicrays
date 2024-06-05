@@ -1,6 +1,5 @@
 from scripts.logs import log, Level
 
-from scripts.CosmicRay import CosmicRay
 from scripts.MyDrive import MyDrive
 from scripts.Track import Track
 

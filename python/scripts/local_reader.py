@@ -1,12 +1,14 @@
 import os
 import json
 import time
+
 from datetime import datetime
+
+from scripts import paths
 
 from scripts.logs import log, Level
 
 from scripts.Track import Settings
-from scripts.local_writer import folder, settings_folder, automode_file, settings_file
 from scripts.local_writer import initialize_settings, reinitialize_active, reinitialize_angle
 from scripts.dates import get_todays_file_name
 
@@ -19,7 +21,7 @@ def is_there_the_correct_file(date: datetime) -> bool:
 # Search if today's file exists in local folder using name.
 def is_there_the_correct_file_by_name(day_name: str) -> bool:
     
-    for file in os.listdir(folder): # For each file in local folder.
+    for file in os.listdir(paths.data_folder): # For each file in local folder.
         if file == f"{day_name}.csv": # If is equal to the file it's seaching for.
             return True
         
@@ -35,7 +37,7 @@ def read_settings() -> Settings:
     while a_data == None:
         
         try:
-            with open(os.path.join(settings_folder, automode_file), "r") as a_f: # Opening file in reading mode.
+            with open(os.path.join(paths.settings_folder, paths.automode_file), "r") as a_f: # Opening file in reading mode.
                 json_a_data = a_f.read() # Reading file.
                 
                 if json_a_data == "": # If the is empty.
@@ -75,7 +77,7 @@ def read_settings() -> Settings:
     while data == None:
         
         try:
-            with open(os.path.join(settings_folder, settings_file), "r") as f: # Opening file in reading mode.
+            with open(os.path.join(paths.settings_folder, paths.settings_file), "r") as f: # Opening file in reading mode.
                 json_data = f.read() # Reading file.
                 
                 if json_data == "": # If the is empty.

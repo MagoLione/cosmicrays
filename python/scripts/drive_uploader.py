@@ -1,6 +1,9 @@
 import os
 import time
+
 from datetime import datetime
+
+from scripts import paths
 
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.errors import HttpError
@@ -9,9 +12,6 @@ from scripts.logs import log, Level
 
 from scripts.dates import get_todays_file_name
 from scripts.drive_reader import searching_for_todays_file_id
-from scripts.local_writer import folder
-
-from scripts.MyDrive import MyDrive
 
 # Uploads a file to Drive.
 def upload_file(service, date: datetime):
@@ -20,7 +20,7 @@ def upload_file(service, date: datetime):
         
     day_id, month_id, _, _ = searching_for_todays_file_id(service, date) # Getting file's id or None.
     
-    file_path = os.path.join(folder, f"{day}.csv") # Obtaining the file path.
+    file_path = os.path.join(paths.data_folder, f"{day}.csv") # Obtaining the file path.
     
     while True:
         try:

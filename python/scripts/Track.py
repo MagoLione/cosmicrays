@@ -1,3 +1,5 @@
+from CosmicRay import CosmicRay
+
 # A class representing the measurement tool settings.
 class Settings:
     def __init__(self, active: bool, angle: int, description: str = None) -> None:
@@ -8,7 +10,7 @@ class Settings:
 # A class to track global public variables.
 class Track:
     def __init__(self) -> None:
-        self.to_do_list: list = []
+        self.to_do_list: list[CosmicRay] = []
         self.is_running: bool = False
         self.count: int = 0
         self.description: str = None

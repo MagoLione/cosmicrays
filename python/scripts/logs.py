@@ -5,7 +5,7 @@ import textwrap
 
 from datetime import datetime
 
-logs_folder = "YOUR-LOGS-FOLDER"
+from scripts import paths
 
 # A class usefull to classificate errors by gravity level.
 class Level():
@@ -52,7 +52,7 @@ def log(
 def create_log(e, flag: str):
     file_name = get_log_name(flag)
     
-    file_path = os.path.join(logs_folder,file_name)
+    file_path = os.path.join(paths.logs_folder,file_name)
     
     with open(file_path, "a") as file:
         file.write(e+"\n")

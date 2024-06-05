@@ -2,19 +2,18 @@ import io
 import os
 import time
 
+from scripts import paths
+
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseDownload
 
 from scripts.logs import log, Level
 
+from scripts.local_writer import write_binary_file
 from scripts.drive_reader import get_name_by_id
 
-from scripts.MyDrive import MyDrive
-
-from scripts.local_writer import folder
-
 # A function to download a file from Drive.
-def download_file(service, file_id: str, file_name: str|None = None):
+def download_file(service, file_id: str, file_name: str|None = None) -> bytes|None:
 
     # If it's None gets the file name.
     if not file_name:
@@ -47,9 +46,7 @@ def download_file(service, file_id: str, file_name: str|None = None):
             time.sleep(20*i)
             if i < 30:
                 i += 1
-    
-    # Writing a file (in folder folder and with file_name file name) in binary mode.
-    with open(os.path.join(folder, file_name), "wb") as f:
-        f.write(file.getvalue())
+                
+    write_binary_file(os.path.join(paths.data_folder, file_name), file.getvalue())
 
     return file.getvalue()

@@ -2,6 +2,8 @@ import os
 import time
 import json
 
+from scripts import paths
+
 from datetime import datetime
 
 from CosmicRay import CosmicRay
@@ -9,26 +11,23 @@ from scripts.logs import log, Level
 from scripts.dates import get_todays_file_name, from_date_to_string
 from scripts.Track import Settings
 
-folder = "YOUR-DATA-FOLDER"
-
-settings_folder = "YOUR-SETTINGS-FOLDER"
-
-automode_file = "automode.json"
-settings_file = "settings.json"
-
 error_flag = "localwriter"
 
 index1 = 0
 index2 = 0
+
+def write_binary_file(file_name: str, data: bytes):
+    with open(file_name, "wb") as f:
+        f.write(data)
 
 # Deletes useless files in local data folder, like old CSVs.
 def delete_useless_files(date: datetime):
     
     day_name = get_todays_file_name(date) # Getting name of the only usefull file.
     
-    for file in os.listdir(folder): # For each file in local folder.
+    for file in os.listdir(paths.data_folder): # For each file in local folder.
         if file != f"{day_name}.csv": # If is named different.
-            os.remove(os.path.join(folder, file)) # Removing file.
+            os.remove(os.path.join(paths.data_folder, file)) # Removing file.
             
 # Append CosmicRay's data to the csv.
 def write_csv(cr: CosmicRay):
@@ -38,7 +37,7 @@ def write_csv(cr: CosmicRay):
     index1 += 1
         
     file = f"{get_todays_file_name(cr.date)}.csv" # Getting file name.
-    file_path = os.path.join(folder, file) # Getting file path.
+    file_path = os.path.join(paths.data_folder, file) # Getting file path.
     
     formatted_date = from_date_to_string(cr.date, "D") # Getting fully formatted date.
     
@@ -84,7 +83,7 @@ def initialize_settings() -> Settings:
         
     while True:
         try:
-            with open(os.path.join(settings_folder, automode_file), "w") as a_f: # Opening automode file in writing mode.
+            with open(os.path.join(paths.settings_folder, paths.automode_file), "w") as a_f: # Opening automode file in writing mode.
         
                 a_data = {'enabled': enabled}
                 
@@ -112,7 +111,7 @@ def initialize_settings() -> Settings:
         
     while True:
         try:
-            with open(os.path.join(settings_folder, settings_file), "w") as f: # Opening settings file in writing mode.
+            with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening settings file in writing mode.
         
                 data = {'active': active, 'angle': angle, 'description': description}
                 
@@ -145,7 +144,7 @@ def reset_settings():
     
     enabled = False
     
-    with open(os.path.join(settings_folder, automode_file), "w") as a_f: # Opening automode file in writing mode.
+    with open(os.path.join(paths.settings_folder, paths.automode_file), "w") as a_f: # Opening automode file in writing mode.
         
         a_data = {'enabled': enabled}
         
@@ -155,7 +154,7 @@ def reset_settings():
     angle = None
     description = None
     
-    with open(os.path.join(settings_folder, settings_file), "w") as f: # Opening settings file in writing mode.
+    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening settings file in writing mode.
         
         data = {'active': active, 'angle': angle, 'description': description}
         
@@ -167,7 +166,7 @@ def reset_settings():
 def reinitialize_active(settings: Settings) -> Settings:
     print("Reinitializing active...")
     
-    with open(os.path.join(settings_folder, settings_file), "w") as f: # Opening file in writing mode.
+    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
         
         data = {'active': True, 'angle': settings.angle, 'description': settings.description}
         
@@ -182,7 +181,7 @@ def reinitialize_active(settings: Settings) -> Settings:
 # Reinitialize the angle setting.
 def reinitialize_angle(settings: Settings) -> Settings:
     print("Reinitializing angle...")
-    with open(os.path.join(settings_folder, settings_file), "w") as f: # Opening file in writing mode.
+    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
         
         data = {'active': settings.active, 'angle': 0, 'description': settings.description}
         
