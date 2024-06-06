@@ -7,6 +7,8 @@ import pytz
 from datetime import datetime
 from serial import SerialException
 
+from serial_com_config import receiver_board, servo_board
+
 from scripts import paths
 
 from scripts.logs import log, Level
@@ -31,13 +33,13 @@ def start():
     try:
         # Setting serial communication for the reciver.
         ser_reciver = serial.Serial(
-            port='COM4',
+            port=receiver_board,
             baudrate=19200,
         )
         
         # Setting serial communication for the servo motor.
         ser_servo = serial.Serial(
-            port='COM5',
+            port=servo_board,
             baudrate=19200,
         )
     except (PermissionError) as e:
