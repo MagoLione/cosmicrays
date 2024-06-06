@@ -49,18 +49,19 @@ def log(
     threading.Thread(target=create_log, args=[error, flag]).start()
 
 # A function to create a new log file and write it.
-def create_log(e, flag: str):
+def create_log(e, flag: str) -> bool:
     file_name = get_log_name(flag)
     
     file_path = os.path.join(paths.logs_folder,file_name)
     
-    while True:
-        try:
-            with open(file_path, "a") as file:
-                file.write(e+"\n")
-            break
-        except OSError as e:
-            print("An error occurred writing a log file. Check if the path exists.")
+    try:
+        with open(file_path, "a") as file:
+            file.write(e+"\n")
+        return True
+    except OSError as e:
+        print("An error occurred writing a log file. Check if the path exists.")
+        
+        return False
 
 # A function to get the log file name.
 def get_log_name(flag):

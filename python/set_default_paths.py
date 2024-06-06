@@ -4,11 +4,11 @@ import textwrap
 def set_default_paths():
     currend_dir = os.getcwd()
     
-    data_folder = "/data"
-    settings_folder = "/settings"
-    logs_folder = "/logs"
+    data_folder = "data"
+    settings_folder = "settings"
+    logs_folder = "logs"
     
-    paths_file = "/scripts/paths.py"
+    paths_file = "scripts\\paths.py"
     
     data_path = os.path.join(currend_dir, data_folder)
     if not os.path.isdir(data_path):
@@ -23,25 +23,26 @@ def set_default_paths():
         os.mkdir(logs_path)
     
     file_text = textwrap.dedent(
-    """
-    data_folder = "YOUR-DATA-FOLDER"
+    f"""
+    data_folder = "{os.path.join(currend_dir, data_folder)}"
 
-    settings_folder = "YOUR-SETTINGS-FOLDER"
+    settings_folder = "{os.path.join(currend_dir, settings_folder)}"
 
-    logs_folder = "YOUR-LOGS-FOLDER"
+    logs_folder = "{os.path.join(currend_dir, logs_folder)}"
 
     automode_file = "automode.json"
     settings_file = "settings.json"
     """
     )
     
-    while True:
-        try:
-            with open(os.path.join(currend_dir, paths_file), "w") as f:
-                f.write(file_text)
+    try:
+        with open(os.path.join(currend_dir, paths_file), "w") as f:
+            f.write(file_text)
+        print("Done.")
             
-            break
-                
-        except (OSError) as e:
-            print("An error occurred setting default paths.")
-            print(e)
+    except (OSError) as e:
+        print("An error occurred setting default paths.")
+        print(e)
+            
+if __name__ == "__main__":
+    set_default_paths()

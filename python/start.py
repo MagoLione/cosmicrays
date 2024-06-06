@@ -59,12 +59,15 @@ def start():
             e=f"""
             An error occurred establishing the serial connection.
             
+            Check that you have set the serial connection ports correctly in serial_com_config.py.
+            
             Serial exception:
             {ex}
             """,
             flag="serialcom",
             level=Level.H
         )
+        print("Check serial settings in serial_com_config.py.")
         return
     
     """
@@ -263,7 +266,11 @@ def start():
     print("END")
 
 if __name__ == "__main__":
-    if not os.path.isdir(paths.data_folder) or not os.path.isdir(paths.settings_folder) or not os.path.isdir(paths.logs_folder):
-        print("Paths are not correctly setted. Use set_default_paths.py file to set the default paths or check /scripts/paths.py file.")
+    while True:
+        if not os.path.isdir(paths.data_folder) or not os.path.isdir(paths.settings_folder) or not os.path.isdir(paths.logs_folder):
+            print("Paths are not correctly setted. Use set_default_paths.py file to set the default paths or check /scripts/paths.py file.")
+            input("Click any key to retry.")
+        else:
+            break
     
     start()

@@ -6,7 +6,7 @@ from scripts import paths
 
 from datetime import datetime
 
-from CosmicRay import CosmicRay
+from scripts.CosmicRay import CosmicRay
 from scripts.logs import log, Level
 from scripts.dates import get_todays_file_name, from_date_to_string
 from scripts.Track import Settings

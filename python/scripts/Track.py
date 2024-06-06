@@ -1,4 +1,4 @@
-from CosmicRay import CosmicRay
+from scripts.CosmicRay import CosmicRay
 
 # A class representing the measurement tool settings.
 class Settings:

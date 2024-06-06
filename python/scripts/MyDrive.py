@@ -1,10 +1,10 @@
 import time
 
-from scripts.logs import log, Level
-
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+
+from scripts.logs import log, Level
 
 class MyDrive:
     def __init__(self) -> None:
