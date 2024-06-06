@@ -54,8 +54,13 @@ def create_log(e, flag: str):
     
     file_path = os.path.join(paths.logs_folder,file_name)
     
-    with open(file_path, "a") as file:
-        file.write(e+"\n")
+    while True:
+        try:
+            with open(file_path, "a") as file:
+                file.write(e+"\n")
+            break
+        except OSError as e:
+            print("An error occurred writing a log file. Check if the path exists.")
 
 # A function to get the log file name.
 def get_log_name(flag):

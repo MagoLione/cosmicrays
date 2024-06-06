@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 import serial
@@ -5,6 +6,8 @@ import pytz
 
 from datetime import datetime
 from serial import SerialException
+
+from scripts import paths
 
 from scripts.logs import log, Level
 from scripts.CosmicRay import CosmicRay
@@ -258,4 +261,7 @@ def start():
     print("END")
 
 if __name__ == "__main__":
+    if not os.path.isdir(paths.data_folder) or not os.path.isdir(paths.settings_folder) or not os.path.isdir(paths.logs_folder):
+        print("Paths are not correctly setted. Use set_default_paths.py file to set the default paths or check /scripts/paths.py file.")
+    
     start()

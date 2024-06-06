@@ -16,9 +16,26 @@ error_flag = "localwriter"
 index1 = 0
 index2 = 0
 
+# Write a file in binary mode.
 def write_binary_file(file_name: str, data: bytes):
-    with open(file_name, "wb") as f:
-        f.write(data)
+    while True:
+        try:
+            with open(file_name, "wb") as f:
+                f.write(data)
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred writing a file:
+                
+                In {file_name} path.
+                If it repeats, check if the path exists.
+                
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+            )
 
 # Deletes useless files in local data folder, like old CSVs.
 def delete_useless_files(date: datetime):
@@ -41,15 +58,30 @@ def write_csv(cr: CosmicRay):
     
     formatted_date = from_date_to_string(cr.date, "D") # Getting fully formatted date.
     
-    with open(file_path, "a") as f: # Opening file in append mode.
-        f.write(f"{formatted_date},{cr.angle},{cr.description}\n") # Writing the file.
+    while True:
+        try:
+            with open(file_path, "a") as f: # Opening file in append mode.
+                f.write(f"{formatted_date},{cr.angle},{cr.description}\n") # Writing the file.
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred writing CSV file:
+                
+                Check if the path exists.
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+                
+            )
         
     index2 += 1
     
     if index1 > index2:        
         log(
             e=f"""
-            An error occurred while writing measurements to the file:
+            An error occurred writing measurements to the file:
             
             Some measurements were lost.
             If it repeats, check if other programs are using the file.
@@ -63,7 +95,7 @@ def write_csv(cr: CosmicRay):
     elif index1 < index2:
         log(
             e=f"""
-            An error occurred while writing measurements to the file:
+            An error occurred writing measurements to the file:
             
             Some measurements were write multiple times.
             It hasn't explanation.
@@ -90,7 +122,7 @@ def initialize_settings() -> Settings:
                 a_f.write(json.dumps(a_data, indent=4)) # Writing data in json format.
                 
             break
-        except (OSError) as e:
+        except OSError as e:
             log(
                 e=f"""
                 An error occurred initializing automode.json file:
@@ -118,7 +150,7 @@ def initialize_settings() -> Settings:
                 f.write(json.dumps(data, indent=4)) # Writing data in json format.
                 
             break
-        except (OSError) as e:
+        except OSError as e:
             log(
                 e=f"""
                 An error occurred initializing settings.json file:
@@ -144,21 +176,51 @@ def reset_settings():
     
     enabled = False
     
-    with open(os.path.join(paths.settings_folder, paths.automode_file), "w") as a_f: # Opening automode file in writing mode.
+    while True:
+        try:
+            with open(os.path.join(paths.settings_folder, paths.automode_file), "w") as a_f: # Opening automode file in writing mode.
         
-        a_data = {'enabled': enabled}
-        
-        a_f.write(json.dumps(a_data, indent=4)) # Writing data in json format.
+                a_data = {'enabled': enabled}
+                
+                a_f.write(json.dumps(a_data, indent=4)) # Writing data in json format.
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred resetting automdoe.json file:
+                
+                Check file's users.
+                
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+            )
     
     active = None
     angle = None
     description = None
     
-    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening settings file in writing mode.
-        
-        data = {'active': active, 'angle': angle, 'description': description}
-        
-        f.write(json.dumps(data, indent=4)) # Writing data in json format.
+    while True:
+        try:
+            with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening settings file in writing mode.
+                
+                data = {'active': active, 'angle': angle, 'description': description}
+                
+                f.write(json.dumps(data, indent=4)) # Writing data in json format.
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred resetting settings.json file:
+                
+                Check file's users.
+                
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+            )
         
     print("Done.")
     
@@ -166,11 +228,26 @@ def reset_settings():
 def reinitialize_active(settings: Settings) -> Settings:
     print("Reinitializing active...")
     
-    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
-        
-        data = {'active': True, 'angle': settings.angle, 'description': settings.description}
-        
-        f.write(json.dumps(data, indent=4)) # Writing data in json format.
+    while True:
+        try:
+            with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
+                
+                data = {'active': True, 'angle': settings.angle, 'description': settings.description}
+                
+                f.write(json.dumps(data, indent=4)) # Writing data in json format.
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred reinitializing settings.json file:
+                
+                Check file's users.
+                
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+            )
         
     settings.angle = 0
     
@@ -181,12 +258,28 @@ def reinitialize_active(settings: Settings) -> Settings:
 # Reinitialize the angle setting.
 def reinitialize_angle(settings: Settings) -> Settings:
     print("Reinitializing angle...")
-    with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
-        
-        data = {'active': settings.active, 'angle': 0, 'description': settings.description}
-        
-        f.write(json.dumps(data, indent=4)) # Writing data in json format.
-        
+    
+    while True:
+        try:
+            with open(os.path.join(paths.settings_folder, paths.settings_file), "w") as f: # Opening file in writing mode.
+                
+                data = {'active': settings.active, 'angle': 0, 'description': settings.description}
+                
+                f.write(json.dumps(data, indent=4)) # Writing data in json format.
+            break
+        except OSError as e:
+            log(
+                e=f"""
+                An error occurred reinitializing settings.json file:
+                
+                Check file's users.
+                
+                {e}
+                """,
+                flag=error_flag,
+                level=Level.M
+            )
+            
     settings.angle = 0
     
     print("Angle is set to 0.")
